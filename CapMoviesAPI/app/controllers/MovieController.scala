@@ -1,12 +1,15 @@
 package controllers
 
 import dao.MovieDAO
+import models.JsonFormat.movieFormat
+import models.Movie
 import play.api.libs.json.Json
 import play.api.mvc.{AbstractController, ControllerComponents}
 import play.modules.reactivemongo.{MongoController, ReactiveMongoApi, ReactiveMongoComponents}
 import reactivemongo.bson.{BSONDocument, BSONObjectID}
+
 import javax.inject.Inject
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 
 class MovieController @Inject()(components: ControllerComponents, val reactiveMongoApi: ReactiveMongoApi, dao: MovieDAO) extends AbstractController(components)
   with MongoController with ReactiveMongoComponents with play.api.i18n.I18nSupport {
@@ -18,12 +21,12 @@ class MovieController @Inject()(components: ControllerComponents, val reactiveMo
       }
     }
 
-//    def update(id: BSONObjectID) = Action.async(parse) {
-//      _.body.validate[Movie].map {
-//        dao.update(id, result).map {
-//          case Some(feed) => Ok(Json.toJson(feed))
-//            case_=> Not Found
-//        }
-//      }.getOrElse(Future.successful(BadRequest("Bad Update")))
-//    }
+  def update(id: BSONObjectID) = Action.async(parse.json) {
+    _.body.validate[Movie].map { result =>
+      dao.update(id, result).map {
+        case Some(feed) =>Ok(Json.toJson(feed))
+        case _ => NotFound
+      }
+    }.getOrElse(Future.successful(BadRequest("Invalid update")))
+  }
 }
