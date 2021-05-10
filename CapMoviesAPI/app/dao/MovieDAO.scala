@@ -12,14 +12,25 @@ import reactivemongo.play.json.collection.JSONCollection
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class MovieDAO @Inject()(implicit ec: ExecutionContext, reactiveMongoApi: ReactiveMongoApi){
+class MovieDAO @Inject()(implicit ec: ExecutionContext, reactiveMongoApi: ReactiveMongoApi) {
 
   private def collection: Future[JSONCollection] = reactiveMongoApi.database.map(_.collection("Movies"))
 
-  def read( limit: Int = 100): Future[Seq[Movie]] =
-      collection.flatMap(
+  def read(limit: Int = 100): Future[Seq[Movie]] =
+    collection.flatMap(
       _.find(BSONDocument())
-      .cursor[Movie](ReadPreference.Primary)
-      .collect[Seq](limit, Cursor.FailOnError[Seq[Movie]]()))
+        .cursor[Movie](ReadPreference.Primary)
+        .collect[Seq](limit, Cursor.FailOnError[Seq[Movie]]()))
+
+  def update(id: BSONObjectID, movie: Movie): Future[Option[Movie]] = {
+    collection.flatMap(_.findAndUpdate(BSONDocument("_id" -> id), BSONDocument(f"$$set" -> BSONDocument(
+      "title" -> movie.title,
+      "director" -> movie.director,
+      "actors" -> movie.actors,
+      "rating" -> movie.rating
+    )
+    ), true)
+      .map(_.result[Movie]))
+  }
 
 }

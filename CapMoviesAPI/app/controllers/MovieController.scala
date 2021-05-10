@@ -4,7 +4,7 @@ import dao.MovieDAO
 import play.api.libs.json.Json
 import play.api.mvc.{AbstractController, ControllerComponents}
 import play.modules.reactivemongo.{MongoController, ReactiveMongoApi, ReactiveMongoComponents}
-
+import reactivemongo.bson.{BSONDocument, BSONObjectID}
 import javax.inject.Inject
 import scala.concurrent.ExecutionContext
 
@@ -17,4 +17,13 @@ class MovieController @Inject()(components: ControllerComponents, val reactiveMo
         Ok(views.html.movies(list))
       }
     }
+
+//    def update(id: BSONObjectID) = Action.async(parse) {
+//      _.body.validate[Movie].map {
+//        dao.update(id, result).map {
+//          case Some(feed) => Ok(Json.toJson(feed))
+//            case_=> Not Found
+//        }
+//      }.getOrElse(Future.successful(BadRequest("Bad Update")))
+//    }
 }
