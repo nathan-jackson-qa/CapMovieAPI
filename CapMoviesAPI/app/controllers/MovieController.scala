@@ -8,6 +8,7 @@ import play.api.mvc.{AbstractController, ControllerComponents}
 import play.modules.reactivemongo.{MongoController, ReactiveMongoApi, ReactiveMongoComponents}
 import reactivemongo.bson.{BSONDocument, BSONObjectID}
 
+
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -17,7 +18,7 @@ class MovieController @Inject()(components: ControllerComponents, val reactiveMo
 
     def listMovies = Action async {
       dao.read(100).map { list =>
-        Ok(views.html.movies(list))
+        Ok(Json.toJson(list))
       }
     }
 
@@ -28,5 +29,27 @@ class MovieController @Inject()(components: ControllerComponents, val reactiveMo
         case _ => NotFound
       }
     }.getOrElse(Future.successful(BadRequest("Invalid update")))
+
+    def read(id: BSONObjectID) = Action async {
+      dao.readOne(id).map { movie =>
+        movie.map { result =>
+          Ok(Json.toJson((result)))
+        }.getOrElse((NotFound))
+      }
+    }
+
+    def delete(id: BSONObjectID) = Action async {
+      dao.delete(id).map {
+        case Some(movie) => Ok(Json.toJson(movie))
+        case _ => NotFound
+      }
+    }
+
+  def create = Action.async(parse.json) {
+    _.body.validate[Movie].map { result =>
+      dao.create(result).map { _ =>
+        Created}
+    }.getOrElse(Future.successful(BadRequest("Invalid movie")))
+
   }
 }
