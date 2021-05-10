@@ -3,3 +3,5 @@ GET     /assets/*file               controllers.Assets.versioned(path="/public",
 GET     /                           controllers.HomeController.index
 
 GET     /list                       controllers.MovieController.listMovies
+
+POST    /update/:id                 controllers.MovieController.update(id: reactivemongo.bson.BSONObjectID)
