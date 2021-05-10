@@ -24,4 +24,7 @@ class MovieDAO @Inject()(implicit ec: ExecutionContext, reactiveMongoApi: Reacti
 
   def readOne (id: BSONObjectID): Future[Option[Movie]] =
   collection.flatMap((_.find(BSONDocument("_id" -> id)).one[Movie]))
+
+  def delete(id: BSONObjectID): Future[Option[Movie]] =
+    collection.flatMap(_.findAndRemove(BSONDocument("_id" ->  id)).map(_.result[Movie]))
 }
