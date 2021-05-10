@@ -1,7 +1,7 @@
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
 GET     /                           controllers.HomeController.index
 GET     /list                       controllers.MovieController.listMovies
-POST    /update/:id                 controllers.MovieController.update(id: reactivemongo.bson.BSONObjectID)
+PUT     /update/:id                 controllers.MovieController.update(id: reactivemongo.bson.BSONObjectID)
 GET     /read/:id                   controllers.MovieController.read(id: reactivemongo.bson.BSONObjectID)
 DELETE  /delete/:id                 controllers.MovieController.delete(id: reactivemongo.bson.BSONObjectID)
 POST    /create                     controllers.MovieController.create

@@ -25,10 +25,11 @@ class MovieController @Inject()(components: ControllerComponents, val reactiveMo
   def update(id: BSONObjectID) = Action.async(parse.json) {
     _.body.validate[Movie].map { result =>
       dao.update(id, result).map {
-        case Some(feed) =>Ok(Json.toJson(feed))
+        case Some(feed) => Ok(Json.toJson(feed))
         case _ => NotFound
       }
     }.getOrElse(Future.successful(BadRequest("Invalid update")))
+  }
 
     def read(id: BSONObjectID) = Action async {
       dao.readOne(id).map { movie =>
