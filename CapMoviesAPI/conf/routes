@@ -5,3 +5,4 @@ GET     /                           controllers.HomeController.index
 GET     /list                       controllers.MovieController.listMovies
 GET     /read/:id                   controllers.MovieController.read(id: reactivemongo.bson.BSONObjectID)
 DELETE  /delete/:id                 controllers.MovieController.delete(id: reactivemongo.bson.BSONObjectID)
+POST    /create                     controllers.MovieController.create

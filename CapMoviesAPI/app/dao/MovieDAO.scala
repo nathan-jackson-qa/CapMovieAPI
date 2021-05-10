@@ -12,19 +12,22 @@ import reactivemongo.play.json.collection.JSONCollection
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class MovieDAO @Inject()(implicit ec: ExecutionContext, reactiveMongoApi: ReactiveMongoApi){
+class MovieDAO @Inject()(implicit ec: ExecutionContext, reactiveMongoApi: ReactiveMongoApi) {
 
   private def collection: Future[JSONCollection] = reactiveMongoApi.database.map(_.collection("Movies"))
 
-  def read( limit: Int = 100): Future[Seq[Movie]] =
-      collection.flatMap(
+  def read(limit: Int = 100): Future[Seq[Movie]] =
+    collection.flatMap(
       _.find(BSONDocument())
-      .cursor[Movie](ReadPreference.Primary)
-      .collect[Seq](limit, Cursor.FailOnError[Seq[Movie]]()))
+        .cursor[Movie](ReadPreference.Primary)
+        .collect[Seq](limit, Cursor.FailOnError[Seq[Movie]]()))
 
-  def readOne (id: BSONObjectID): Future[Option[Movie]] =
-  collection.flatMap((_.find(BSONDocument("_id" -> id)).one[Movie]))
+  def readOne(id: BSONObjectID): Future[Option[Movie]] =
+    collection.flatMap((_.find(BSONDocument("_id" -> id)).one[Movie]))
 
   def delete(id: BSONObjectID): Future[Option[Movie]] =
-    collection.flatMap(_.findAndRemove(BSONDocument("_id" ->  id)).map(_.result[Movie]))
+    collection.flatMap(_.findAndRemove(BSONDocument("_id" -> id)).map(_.result[Movie]))
+
+  def create(movie: Movie): Future[WriteResult] =
+    collection.flatMap(_.insert(movie))
 }
