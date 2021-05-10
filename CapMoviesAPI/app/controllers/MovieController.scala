@@ -30,7 +30,7 @@ class MovieController @Inject()(components: ControllerComponents, val reactiveMo
 
     def delete(id: BSONObjectID) = Action async {
       dao.delete(id).map {
-        case Some(booking) => Ok(Json.toJson(booking))
+        case Some(movie) => Ok(Json.toJson(movie))
         case _ => NotFound
       }
     }
