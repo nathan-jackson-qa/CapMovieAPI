@@ -22,6 +22,18 @@ class MovieDAO @Inject()(implicit ec: ExecutionContext, reactiveMongoApi: Reacti
         .cursor[Movie](ReadPreference.Primary)
         .collect[Seq](limit, Cursor.FailOnError[Seq[Movie]]()))
 
+
+  def update(id: BSONObjectID, movie: Movie): Future[Option[Movie]] = {
+    collection.flatMap(_.findAndUpdate(BSONDocument("_id" -> id), BSONDocument(f"$$set" -> BSONDocument(
+      "title" -> movie.title,
+      "director" -> movie.director,
+      "actors" -> movie.actors,
+      "rating" -> movie.rating
+    )
+    ), true)
+      .map(_.result[Movie]))
+  }
+
   def readOne(id: BSONObjectID): Future[Option[Movie]] =
     collection.flatMap((_.find(BSONDocument("_id" -> id)).one[Movie]))
 

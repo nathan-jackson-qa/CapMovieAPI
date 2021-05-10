@@ -26,5 +26,6 @@ libraryDependencies ++= Seq(
 // Provide JSON serialization for Joda-Time
 "com.typesafe.play" %% "play-json-joda" % "2.7.4"
 )
+
 PlayKeys.devSettings := Seq("play.server.http.port" -> "9001")
 RoutesKeys.routesImport += "play.modules.reactivemongo.PathBindables._"

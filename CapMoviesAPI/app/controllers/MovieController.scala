@@ -6,7 +6,8 @@ import models.Movie
 import play.api.libs.json.Json
 import play.api.mvc.{AbstractController, ControllerComponents}
 import play.modules.reactivemongo.{MongoController, ReactiveMongoApi, ReactiveMongoComponents}
-import reactivemongo.bson.BSONObjectID
+import reactivemongo.bson.{BSONDocument, BSONObjectID}
+
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
@@ -20,6 +21,14 @@ class MovieController @Inject()(components: ControllerComponents, val reactiveMo
         Ok(Json.toJson(list))
       }
     }
+
+  def update(id: BSONObjectID) = Action.async(parse.json) {
+    _.body.validate[Movie].map { result =>
+      dao.update(id, result).map {
+        case Some(feed) =>Ok(Json.toJson(feed))
+        case _ => NotFound
+      }
+    }.getOrElse(Future.successful(BadRequest("Invalid update")))
 
     def read(id: BSONObjectID) = Action async {
       dao.readOne(id).map { movie =>
@@ -41,5 +50,6 @@ class MovieController @Inject()(components: ControllerComponents, val reactiveMo
       dao.create(result).map { _ =>
         Created}
     }.getOrElse(Future.successful(BadRequest("Invalid movie")))
+
   }
 }
