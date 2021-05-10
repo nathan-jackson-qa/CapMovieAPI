@@ -12,3 +12,8 @@ import reactivemongo.play.json._
 
 case class Movie(_id: Option[BSONObjectID], title: String, director: String, actors: Seq[BSONDocument], rating: String)
 
+object JsonFormat {
+  // Generates Writes and Reads for Feed and User thanks to Json Macros
+  implicit val movieFormat: OFormat[Movie] = Json.format[Movie]
+}
+
