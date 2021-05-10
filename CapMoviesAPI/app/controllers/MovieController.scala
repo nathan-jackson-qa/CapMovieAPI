@@ -1,9 +1,11 @@
 package controllers
 
 import dao.MovieDAO
+import models.JsonFormat.movieFormat
 import play.api.libs.json.Json
 import play.api.mvc.{AbstractController, ControllerComponents}
 import play.modules.reactivemongo.{MongoController, ReactiveMongoApi, ReactiveMongoComponents}
+import reactivemongo.bson.BSONObjectID
 
 import javax.inject.Inject
 import scala.concurrent.ExecutionContext
@@ -14,7 +16,15 @@ class MovieController @Inject()(components: ControllerComponents, val reactiveMo
 
     def listMovies = Action async {
       dao.read(100).map { list =>
-        Ok(views.html.movies(list))
+        Ok(Json.toJson(list))
+      }
+    }
+
+    def read(id: BSONObjectID) = Action async {
+      dao.readOne(id).map { movie =>
+        movie.map { result =>
+          Ok(Json.toJson((result)))
+        }.getOrElse((NotFound))
       }
     }
 }
