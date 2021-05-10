@@ -2,13 +2,14 @@ package controllers
 
 import dao.MovieDAO
 import models.JsonFormat.movieFormat
+import models.Movie
 import play.api.libs.json.Json
 import play.api.mvc.{AbstractController, ControllerComponents}
 import play.modules.reactivemongo.{MongoController, ReactiveMongoApi, ReactiveMongoComponents}
 import reactivemongo.bson.BSONObjectID
 
 import javax.inject.Inject
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 
 class MovieController @Inject()(components: ControllerComponents, val reactiveMongoApi: ReactiveMongoApi, dao: MovieDAO) extends AbstractController(components)
   with MongoController with ReactiveMongoComponents with play.api.i18n.I18nSupport {
@@ -34,4 +35,11 @@ class MovieController @Inject()(components: ControllerComponents, val reactiveMo
         case _ => NotFound
       }
     }
+
+  def create = Action.async(parse.json) {
+    _.body.validate[Movie].map { result =>
+      dao.create(result).map { _ =>
+        Created}
+    }.getOrElse(Future.successful(BadRequest("Invalid movie")))
+  }
 }
