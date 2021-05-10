@@ -1,0 +1,8 @@
+@(movies: Seq[Movie])
+
+@main("Welcome to Play") {
+
+@for(movie <- movies) {
+<p>@movie.title</p>
+}
+}
