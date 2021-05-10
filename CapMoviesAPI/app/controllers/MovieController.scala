@@ -27,4 +27,11 @@ class MovieController @Inject()(components: ControllerComponents, val reactiveMo
         }.getOrElse((NotFound))
       }
     }
+
+    def delete(id: BSONObjectID) = Action async {
+      dao.delete(id).map {
+        case Some(booking) => Ok(Json.toJson(booking))
+        case _ => NotFound
+      }
+    }
 }
