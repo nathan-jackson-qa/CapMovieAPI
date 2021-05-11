@@ -28,7 +28,9 @@ class MovieDAO @Inject()(implicit ec: ExecutionContext, reactiveMongoApi: Reacti
       "title" -> movie.title,
       "director" -> movie.director,
       "actors" -> movie.actors,
-      "rating" -> movie.rating
+      "rating" -> movie.rating,
+      "genre" -> movie.genre,
+      "img" -> movie.img
     )
     ), true)
       .map(_.result[Movie]))
