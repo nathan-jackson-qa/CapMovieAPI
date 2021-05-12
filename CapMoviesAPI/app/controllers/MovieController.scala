@@ -54,9 +54,7 @@ class MovieController @Inject()(components: ControllerComponents, val reactiveMo
   }
 
   def filter(genre: String) = Action async {
-    println(s"filtering $genre")
     dao.filter(genre).map {filtered =>
-      println(filtered)
       Ok(Json.toJson((filtered)))
     }
   }
