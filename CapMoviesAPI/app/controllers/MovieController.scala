@@ -53,4 +53,10 @@ class MovieController @Inject()(components: ControllerComponents, val reactiveMo
     }.getOrElse(Future.successful(BadRequest("Invalid movie")))
 
   }
+
+  def search(searchTerm: String) = Action async {
+    dao.search(searchTerm, 100).map { list =>
+      Ok(Json.toJson(list))
+    }
+  }
 }
