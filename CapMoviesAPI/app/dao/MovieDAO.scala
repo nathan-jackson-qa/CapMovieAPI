@@ -44,4 +44,12 @@ class MovieDAO @Inject()(implicit ec: ExecutionContext, reactiveMongoApi: Reacti
 
   def create(movie: Movie): Future[WriteResult] =
     collection.flatMap(_.insert(movie))
+
+  def search(searchTerm: String, limit: Int = 100) = {
+    collection.flatMap(
+      _.find(BSONDocument("$text" -> BSONDocument("$search" -> searchTerm)))
+        .cursor[Movie](ReadPreference.Primary)
+        .collect[Seq](limit, Cursor.FailOnError[Seq[Movie]]())
+    )
+  }
 }
