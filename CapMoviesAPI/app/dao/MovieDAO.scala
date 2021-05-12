@@ -2,6 +2,7 @@ package dao
 
 import models.JsonFormat.movieFormat
 import models.Movie
+import play.api.libs.json.{JsObject, Json}
 import play.modules.reactivemongo.ReactiveMongoApi
 import reactivemongo.api.commands.WriteResult
 import reactivemongo.api.{Cursor, ReadPreference}
@@ -51,5 +52,11 @@ class MovieDAO @Inject()(implicit ec: ExecutionContext, reactiveMongoApi: Reacti
         .cursor[Movie](ReadPreference.Primary)
         .collect[Seq](limit, Cursor.FailOnError[Seq[Movie]]())
     )
+  }
+
+  def filter(genre: String): Future[Seq[Movie]] = {
+    collection.flatMap(_.find(Json.obj("genre" -> genre))
+      .cursor[Movie](ReadPreference.Primary)
+      .collect[Seq](100, Cursor.FailOnError[Seq[Movie]]()))
   }
 }

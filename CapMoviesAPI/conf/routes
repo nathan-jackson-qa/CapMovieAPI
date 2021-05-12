@@ -6,4 +6,5 @@ GET     /read/:id                   controllers.MovieController.read(id: reactiv
 DELETE  /delete/:id                 controllers.MovieController.delete(id: reactivemongo.bson.BSONObjectID)
 POST    /create                     controllers.MovieController.create
 GET     /search/:searchTerm         controllers.MovieController.search(searchTerm: String)
+GET     /filter/:genre              controllers.MovieController.filter(genre: String)
 
