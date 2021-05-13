@@ -14,6 +14,13 @@ scalaVersion := "2.13.5"
 
 libraryDependencies ++= Seq( jdbc , ehcache , ws , specs2 % Test , guice )
 
+libraryDependencies += "org.scalatest" %% "scalatest-wordspec" % "3.2.2" % "test"
+libraryDependencies += "org.scalatest" %% "scalatest-shouldmatchers" % "3.2.2" % "test"
+libraryDependencies ++= Seq(
+  "org.scalatestplus.play" %% "scalatestplus-play" % "5.1.0" % "test",
+  "org.scalatestplus" %% "mockito-3-4" % "3.2.2.0" % "test"
+)
+
 unmanagedResourceDirectories in Test <+=  baseDirectory ( _ /"target/web/public/test" )
 
 libraryDependencies ++= Seq(
