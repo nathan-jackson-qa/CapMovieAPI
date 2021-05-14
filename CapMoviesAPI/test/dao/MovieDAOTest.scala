@@ -17,15 +17,15 @@ class MovieDAOTest extends abstractTest {
   val ec = mock[ExecutionContext]
   val dao = new MovieDAO()(ec, mongo)
 
-  "A DAO" can {
-    "calling read" should {
-      "pls" in {
-        val id = BSONObjectID.generate()
-        val result = dao.readOne(id)
-        val movie = mock[Future[Option[Movie]]]
-        when(dao.readOne(id)).thenReturn(movie)
-        assert(dao.readOne(id) == movie)
-      }
-    }
-  }
+//  "A DAO" can {
+//    "calling read" should {
+//      "pls" in {
+//        val id = BSONObjectID.generate()
+//        val result = dao.readOne(id)
+//        val movie = mock[Future[Option[Movie]]]
+//        when(dao.readOne(id)).thenReturn(movie)
+//        assert(dao.readOne(id) == movie)
+//      }
+//    }
+//  }
 }
