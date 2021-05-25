@@ -1,3 +1,10 @@
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
-
 GET     /                           controllers.HomeController.index
+GET     /list                       controllers.MovieController.listMovies
+PUT     /update/:id                 controllers.MovieController.update(id: reactivemongo.bson.BSONObjectID)
+GET     /read/:id                   controllers.MovieController.read(id: reactivemongo.bson.BSONObjectID)
+DELETE  /delete/:id                 controllers.MovieController.delete(id: reactivemongo.bson.BSONObjectID)
+POST    /create                     controllers.MovieController.create
+GET     /search/:searchTerm         controllers.MovieController.search(searchTerm: String)
+GET     /filter/:genre              controllers.MovieController.filter(genre: String)
+
