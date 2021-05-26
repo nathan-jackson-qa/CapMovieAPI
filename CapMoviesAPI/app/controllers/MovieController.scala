@@ -17,7 +17,7 @@ class MovieController @Inject()(components: ControllerComponents, val reactiveMo
   implicit def ec: ExecutionContext = components.executionContext
 
     def listMovies = Action async {
-      dao.read(100).map { list =>
+      dao.list(100).map { list =>
         Ok(Json.toJson(list))
       }
     }
@@ -32,7 +32,7 @@ class MovieController @Inject()(components: ControllerComponents, val reactiveMo
   }
 
     def read(id: BSONObjectID) = Action async {
-      dao.readOne(id).map { movie =>
+      dao.read(id).map { movie =>
         movie.map { result =>
           Ok(Json.toJson((result)))
         }.getOrElse((NotFound))

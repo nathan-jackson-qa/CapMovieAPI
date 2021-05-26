@@ -17,7 +17,7 @@ class MovieDAO @Inject()(implicit ec: ExecutionContext, reactiveMongoApi: Reacti
 
   private def collection: Future[JSONCollection] = reactiveMongoApi.database.map(_.collection("Movies"))
 
-  def read(limit: Int = 100): Future[Seq[Movie]] =
+  def list(limit: Int = 100): Future[Seq[Movie]] =
     collection.flatMap(
       _.find(BSONDocument())
         .cursor[Movie](ReadPreference.Primary)
@@ -37,7 +37,7 @@ class MovieDAO @Inject()(implicit ec: ExecutionContext, reactiveMongoApi: Reacti
       .map(_.result[Movie]))
   }
 
-  def readOne(id: BSONObjectID): Future[Option[Movie]] =
+  def read(id: BSONObjectID): Future[Option[Movie]] =
     collection.flatMap((_.find(BSONDocument("_id" -> id)).one[Movie]))
 
   def delete(id: BSONObjectID): Future[Option[Movie]] =
