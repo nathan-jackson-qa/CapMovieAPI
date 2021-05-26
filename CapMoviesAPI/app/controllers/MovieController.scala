@@ -56,7 +56,7 @@ class MovieController @Inject()(components: ControllerComponents, val reactiveMo
   def filter(genre: String) = Action async {
     dao.filter(genre).map {filtered =>
       Ok(Json.toJson((filtered)))
-    }
+    }.recover(_ => BadRequest("Could not retrieve filtered data"))
   }
 
   def search(searchTerm: String) = Action async {
