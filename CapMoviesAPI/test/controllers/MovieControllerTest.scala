@@ -25,16 +25,18 @@ class MovieControllerTest extends abstractTest {
   val controller = new MovieController(Helpers.stubControllerComponents(), mongo, dao)
   def await[T](arg: Future[T]): T = Await.result(arg, Duration.Inf)
   val movie = Movie(Option(BSONObjectID.parse("609a678ce1a52451685d793f").get), "Gladiator", "Ridley Scott", "Russell Crowe", "R", "Action", "images/posters/gladiator.jpg")
+  val movie1 = Movie(Option(BSONObjectID.parse("609a678ce1a52451685d793f").get), "Gladiator", "Ridley Scott", "Russell Crowe", "R", "Action", "images/posters/gladiator.jpg")
 
 
     "ListMovies" should {
       "return a list of movies: Successful" in {
-        when(dao.list()) thenReturn(Future.successful(Seq(movie)))
+        when(dao.list()) thenReturn(Future.successful(Seq(movie, movie.copy(title = "NewTitle"))))
 
         val result: Future[Result] = controller.listMovies.apply(FakeRequest())
 
         await(result).header.status shouldBe(200)
         contentAsString(result) should include(movie.title)
+        contentAsString(result) should include("NewTitle")
 
       }
       "return a list of movies: unSuccessful" in {
@@ -43,6 +45,15 @@ class MovieControllerTest extends abstractTest {
         val result: Future[Result] = controller.listMovies.apply(FakeRequest())
 
         await(result).header.status shouldBe(400)
+
+      }
+      "return a list of movies: empty" in {
+        when(dao.list()) thenReturn(Future.successful(Seq()))
+
+        val result: Future[Result] = controller.listMovies.apply(FakeRequest())
+
+        await(result).header.status shouldBe(200)
+        contentAsString(result) shouldNot include(movie.title)
 
       }
     }
