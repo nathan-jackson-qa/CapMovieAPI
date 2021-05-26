@@ -17,6 +17,7 @@ libraryDependencies ++= Seq( jdbc , ehcache , ws , specs2 % Test , guice )
 libraryDependencies += "org.scalatest" %% "scalatest-wordspec" % "3.2.2" % "test"
 libraryDependencies += "org.scalatest" %% "scalatest-shouldmatchers" % "3.2.2" % "test"
 libraryDependencies += "org.scalatestplus" %% "mockito-3-4" % "3.2.5.0" % "test"
+libraryDependencies += "org.scalatestplus.play"  %% "scalatestplus-play" % "5.1.0"
 
 unmanagedResourceDirectories in Test <+=  baseDirectory ( _ /"target/web/public/test" )
 

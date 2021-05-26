@@ -5,6 +5,8 @@ import dao.MovieDAO
 import models.Movie
 import org.mockito.ArgumentMatchers.{any, anyString}
 import org.mockito.Mockito._
+import org.scalatestplus.play.guice._
+import play.api.Play.materializer
 
 import scala.concurrent._
 import play.api.test._
@@ -19,7 +21,7 @@ import play.api.test.Helpers._
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
 
-class MovieControllerTest extends abstractTest {
+class MovieControllerTest extends abstractTest with GuiceOneAppPerSuite {
 
   val mongo = mock(classOf[ReactiveMongoApi])
   val dao = mock(classOf[MovieDAO])
@@ -133,5 +135,17 @@ class MovieControllerTest extends abstractTest {
     }
   }
 
+  "update" should {
+    "takes in parameters and updates the movie" in {
+      when(dao.update(any(), any())) thenReturn(Future.successful(Some(movie)))
+      val result = controller.update(BSONObjectID.parse("609a678ce1a52451685d793f").get)(FakeRequest().withHeaders("Content-Type" -> "application/json"))
+      status(result) shouldBe(400)
+    }
+    "takes in parameters and updates the movie" in {
+      when(dao.update(any(), any())) thenReturn(Future.successful(Some(movie)))
+      val result = controller.update(BSONObjectID.parse("609a678ce1a52451685d793f").get)(FakeRequest().withHeaders("Content-Type" -> "application/json"))
+      status(result) shouldBe(400)
+    }
+  }
 
 }
