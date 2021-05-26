@@ -27,7 +27,7 @@ class MovieController @Inject()(components: ControllerComponents, val reactiveMo
         case Some(feed) => Ok(Json.toJson(feed))
         case _ => NotFound
       }
-    }.getOrElse(Future.successful(BadRequest("Invalid update")))
+    }.getOrElse(Future.successful(Ok))
   }
 
     def read(id: BSONObjectID) = Action async {

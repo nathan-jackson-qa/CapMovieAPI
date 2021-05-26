@@ -16,7 +16,7 @@ import play.modules.reactivemongo.ReactiveMongoApi
 import scala.util._
 import play.api.libs.json._
 import play.api.mvc.Result
-import play.api.test.Helpers._
+import play.api.test.Helpers.{status, _}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
@@ -28,7 +28,6 @@ class MovieControllerTest extends abstractTest with GuiceOneAppPerSuite {
   val controller = new MovieController(Helpers.stubControllerComponents(), mongo, dao)
   def await[T](arg: Future[T]): T = Await.result(arg, Duration.Inf)
   val movie = Movie(Option(BSONObjectID.parse("609a678ce1a52451685d793f").get), "Gladiator", "Ridley Scott", "Russell Crowe", "R", "Action", "images/posters/gladiator.jpg")
-  val movie1 = Movie(Option(BSONObjectID.parse("609a678ce1a52451685d793f").get), "Gladiator", "Ridley Scott", "Russell Crowe", "R", "Action", "images/posters/gladiator.jpg")
 
 
   "ListMovies" should {
@@ -136,16 +135,24 @@ class MovieControllerTest extends abstractTest with GuiceOneAppPerSuite {
   }
 
   "update" should {
-    "takes in parameters and updates the movie" in {
+    "takes in no parameters and returns a error" in {
       when(dao.update(any(), any())) thenReturn(Future.successful(Some(movie)))
       val result = controller.update(BSONObjectID.parse("609a678ce1a52451685d793f").get)(FakeRequest().withHeaders("Content-Type" -> "application/json"))
       status(result) shouldBe(400)
     }
     "takes in parameters and updates the movie" in {
       when(dao.update(any(), any())) thenReturn(Future.successful(Some(movie)))
-      val result = controller.update(BSONObjectID.parse("609a678ce1a52451685d793f").get)(FakeRequest().withHeaders("Content-Type" -> "application/json"))
-      status(result) shouldBe(400)
+      val js = Json.parse("""{
+                            |	"title": "Gladiator",
+                            |	"director": "Ridley Scott",
+                            |	"actors": "Russell Crowe",
+                            |	"rating": "R",
+                            |	"genre": "Action",
+                            |	"img": "images/posters/gladiator.jpg"
+                            |}""".stripMargin
+      )
+      val result = controller.update(BSONObjectID.parse("609a678ce1a52451685d793f").get)(FakeRequest("PUT", "/update", FakeHeaders(Seq("Content-Type" -> "application/json")), js))
+      status(result) shouldBe(200)
     }
   }
-
 }
