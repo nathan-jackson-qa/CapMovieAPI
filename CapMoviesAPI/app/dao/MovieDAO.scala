@@ -1,6 +1,5 @@
 package dao
 
-import models.JsonFormat.movieFormat
 import models.Movie
 import play.api.libs.json.{JsObject, Json}
 import play.modules.reactivemongo.ReactiveMongoApi

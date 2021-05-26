@@ -3,6 +3,7 @@ package controllers
 import controllers.abstractTest
 import dao.MovieDAO
 import models.Movie
+import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
 
 import scala.concurrent._
@@ -57,6 +58,25 @@ class MovieControllerTest extends abstractTest {
 
       }
     }
+
+  "read" should {
+    "return a movie" in {
+      when(dao.read(BSONObjectID.parse("609a678ce1a52451685d793f").get)) thenReturn(Future.successful(Some(movie)))
+
+      val result: Future[Result] = controller.read(BSONObjectID.parse("609a678ce1a52451685d793f").get).apply(FakeRequest())
+
+      await(result).header.status shouldBe(200)
+
+    }
+    "not return a movie if not found" in {
+      when(dao.read(any())) thenReturn(Future.successful(None))
+
+      val result: Future[Result] = controller.read(any()).apply(FakeRequest())
+
+      await(result).header.status shouldBe(404)
+
+    }
+  }
 
 
 }

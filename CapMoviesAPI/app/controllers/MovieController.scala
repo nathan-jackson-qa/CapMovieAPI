@@ -1,7 +1,6 @@
 package controllers
 
 import dao.MovieDAO
-import models.JsonFormat.movieFormat
 import models.Movie
 import play.api.libs.json.Json
 import play.api.mvc.{AbstractController, ControllerComponents}
