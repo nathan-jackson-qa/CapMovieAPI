@@ -13,6 +13,7 @@ import play.modules.reactivemongo.ReactiveMongoApi
 import scala.util._
 import play.api.libs.json._
 import play.api.mvc.Result
+import play.api.test.Helpers._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
@@ -26,18 +27,25 @@ class MovieControllerTest extends abstractTest {
   val movie = Movie(Option(BSONObjectID.parse("609a678ce1a52451685d793f").get), "Gladiator", "Ridley Scott", "Russell Crowe", "R", "Action", "images/posters/gladiator.jpg")
 
 
-  "MovieController" can {
     "ListMovies" should {
-      "return a list of movies" in {
+      "return a list of movies: Successful" in {
         when(dao.list()) thenReturn(Future.successful(Seq(movie)))
 
-        val result: Result = await(controller.listMovies.apply(FakeRequest()))
+        val result: Future[Result] = controller.listMovies.apply(FakeRequest())
 
-        result.header.status shouldBe(200)
+        await(result).header.status shouldBe(200)
+        contentAsString(result) should include(movie.title)
+
+      }
+      "return a list of movies: unSuccessful" in {
+        when(dao.list()) thenReturn(Future.failed(new RuntimeException))
+
+        val result: Future[Result] = controller.listMovies.apply(FakeRequest())
+
+        await(result).header.status shouldBe(400)
 
       }
     }
-  }
 
 
 }

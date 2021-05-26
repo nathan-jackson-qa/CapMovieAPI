@@ -17,9 +17,9 @@ class MovieController @Inject()(components: ControllerComponents, val reactiveMo
   implicit def ec: ExecutionContext = components.executionContext
 
     def listMovies = Action async {
-      dao.list(100).map { list =>
+      dao.list().map { list =>
         Ok(Json.toJson(list))
-      }
+      }.recover(_ => BadRequest("Invalid update"))
     }
 
   def update(id: BSONObjectID) = Action.async(parse.json) {
