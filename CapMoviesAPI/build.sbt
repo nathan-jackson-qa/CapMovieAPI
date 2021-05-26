@@ -1,25 +1,22 @@
 import play.sbt.routes.RoutesKeys
 
 name := "ScalaMoviesApi"
- 
-version := "2.8"
-      
+
+version := "1.0"
+
 lazy val `recipies_new_play_version` = (project in file(".")).enablePlugins(PlayScala)
 
 resolvers += "scalaz-bintray" at "https://dl.bintray.com/scalaz/releases"
       
 resolvers += "Akka Snapshot Repository" at "https://repo.akka.io/snapshots/"
-      
+
 scalaVersion := "2.13.5"
 
 libraryDependencies ++= Seq( jdbc , ehcache , ws , specs2 % Test , guice )
 
 libraryDependencies += "org.scalatest" %% "scalatest-wordspec" % "3.2.2" % "test"
 libraryDependencies += "org.scalatest" %% "scalatest-shouldmatchers" % "3.2.2" % "test"
-libraryDependencies ++= Seq(
-  "org.scalatestplus.play" %% "scalatestplus-play" % "5.1.0" % "test",
-  "org.scalatestplus" %% "mockito-3-4" % "3.2.2.0" % "test"
-)
+libraryDependencies += "org.scalatestplus" %% "mockito-3-4" % "3.2.5.0" % "test"
 
 unmanagedResourceDirectories in Test <+=  baseDirectory ( _ /"target/web/public/test" )
 

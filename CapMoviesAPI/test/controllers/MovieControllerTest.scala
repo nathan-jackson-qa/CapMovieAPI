@@ -18,22 +18,9 @@ class MovieControllerTest extends abstractTest {
   val dao = new MovieDAO()(ec, mongo)
   val controller = new MovieController(Helpers.stubControllerComponents(), mongo, dao)
 
-//  "A Controller" can {
-//  "read one move so it" should {
-//    "return a movie" in {
-//      val id = BSONObjectID.parse("609d06ef5fa85241e86c22e6")
-//      id match {
-//        case Success(id) => {
-//          controller.read(id)
-//        }
-//        case Failure(_) => assert(false)
-//      }
-//    }
-//  }
-//}
+  "A MovieController" can {
 
-  "A controller" can {
-    "call the list fucntion" should {
+    "listMovies" should {
       "return a list of movies" in {
         controller.listMovies.apply(FakeRequest())
       }
